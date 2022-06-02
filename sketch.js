@@ -9,6 +9,7 @@ var rapunzel;
 var enrolados;
 var bomba; 
 var agudo;
+var sid; 
 
 
 function preload() {
@@ -35,6 +36,8 @@ function setup() {
  agudo = 20;
 
  bomba = new EraDoGelo (180, 110, 130, 100, agudo);
+
+ sid = new Sid (bomba.posX, bomba.posY);
 }
 
 function draw() {
@@ -51,4 +54,5 @@ function draw() {
  pop();
   
  bomba.jack();
+ sid.preguica();
 }
