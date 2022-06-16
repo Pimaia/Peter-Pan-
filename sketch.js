@@ -30,8 +30,10 @@ var enrolados;
 var bomba; 
 var agudo;
 var sid; 
+var perolanegra;
 
 var nerf = [];
+var cruzeiro = [];
 
 
 function preload() {
@@ -60,6 +62,8 @@ function setup() {
 
  bomba = new EraDoGelo (180, 110, 130, 100, agudo);
 
+ 
+
 }
 
 function draw() {
@@ -80,6 +84,8 @@ function draw() {
  for(var i=0; i < nerf.length; i++){
     nerfar(nerf[i], i);
  }
+ 
+ estaleiro ();
 }
 
 function keyReleased(){
@@ -89,7 +95,7 @@ function keyReleased(){
 }
 
 function keyPressed () {
-  if (keyCode === UP_ARROW){
+  if (keyCode === DOWN_ARROW){
     var sid = new Sid (bomba.posX, bomba.posY);
     nerf.push(sid);
   }
@@ -101,4 +107,25 @@ function nerfar (sid, i) {
   }
 }
 
+function estaleiro () {
+  if (cruzeiro.length > 0) {
+
+    if (cruzeiro[cruzeiro.length-1] === undefined || cruzeiro[cruzeiro.length-1].body.position.x<width-300){
+      var positions = [-40, -60, -70, -20];
+      var position = random (positions);
+      var perolanegra = new PerolaNegra(width, height-100, 170, 170, position);
+      cruzeiro.push (perolanegra);
+    }
+    for (var i = 0; i<cruzeiro.length; i++) {
+    if (cruzeiro[i])  {
+    Matter.Body.setVelocity(cruzeiro[i].body, {x: -0.9, y: 0});
+    cruzeiro[i].luneta();
+  } 
+   } 
+  }
+  else {
+  var perolanegra = new PerolaNegra(width, height-60, 170, 170, -80);
+  cruzeiro.push (perolanegra);
+  }
+}
 

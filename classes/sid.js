@@ -6,6 +6,7 @@ class Sid {
         }
         this.body= Bodies.circle (posX, posY, this.thor, Config);
         World.add (world, this.body);
+        this.pegadas = [];
         this.lerdo = loadImage ("./assets/cannonball.png");
     }
     preguica () {
@@ -14,6 +15,15 @@ class Sid {
         imageMode(CENTER);
         image (this.lerdo, pos.x, pos.y, this.thor, this.thor);
         pop();
+
+        if(this.body.velocity.x > 0 && pos.x > 10){
+            var position = [pos.x, pos.y];
+            this.pegadas.push(position);
+        }
+
+        for(var i = 0; i < this.pegadas.length; i++){
+            image(this.lerdo, this.pegadas[i][0], this.pegadas[i][1], 5, 5)
+        }
     }
 
     dorminhoco(){
