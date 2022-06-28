@@ -83,6 +83,7 @@ function draw() {
  
  for(var i=0; i < nerf.length; i++){
     nerfar(nerf[i], i);
+    borracha(i);
  }
  
  estaleiro ();
@@ -104,6 +105,9 @@ function keyPressed () {
 function nerfar (sid, i) {
   if (sid){
     sid.preguica();
+    if (sid.body.position.x >= width || sid.body.position.y >= height-50){
+      sid.bomba(i);
+    }
   }
 }
 
@@ -129,3 +133,16 @@ function estaleiro () {
   }
 }
 
+
+function borracha (index){
+  for (var i = 0; i<cruzeiro.length; i++) {
+    if (nerf[index] !== undefined && cruzeiro[i] !== undefined){
+    var pavio = Matter.SAT.collides (nerf[index].body, cruzeiro[i].body);  
+    if (pavio.collided){
+      cruzeiro[i].bomba(i); 
+      Matter.World.remove (world, nerf[index].body);
+      delete nerf[index];
+    }
+    }
+  }
+}

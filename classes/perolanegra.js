@@ -19,4 +19,13 @@ class PerolaNegra {
         image(this.ostra, 0, this.posN, this.lar, this.alt);
         pop();
     }
+
+    bomba (index){
+        setTimeout (()=>{
+            Matter.World.remove (world, cruzeiro[index].body);
+            delete cruzeiro[index];
+        }, 2000)
+    }
 }
+
+  
