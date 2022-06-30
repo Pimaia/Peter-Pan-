@@ -8,15 +8,27 @@ class Sid {
         World.add (world, this.body);
         this.pegadas = [];
         this.lerdo = loadImage ("./assets/cannonball.png");
+        this.vel = 0.05;
+        this.anim = [this.lerdo];
+        this.afun = false;
     }
+
+    pixer(){
+        this.vel += 0.05;
+    }
+
     preguica () {
         var pos = this.body.position;
+        var angle = this.body.angle;
+        var index = floor(this.vel % this.anim.length);
         push();
+        translate(pos.x, pos.y);
+        rotate(angle);
         imageMode(CENTER);
-        image (this.lerdo, pos.x, pos.y, this.thor, this.thor);
+        image (this.anim[index], 0, 0, this.thor, this.thor);
         pop();
 
-        if(this.body.velocity.x > 0 && pos.x > 10){
+        if(this.body.velocity.x > 0 && pos.x > 10 && !this.afun){
             var position = [pos.x, pos.y];
             this.pegadas.push(position);
         }
@@ -36,6 +48,10 @@ class Sid {
     }
 
     bomba (index){
+        this.afun = true;
+        this.anim = ocean;
+        this.vel = 0.05
+        this.thor = 150;
         Matter.Body.setVelocity(this.body, {x: 0, y: 0});
         setTimeout (()=>{
             Matter.World.remove (world, this.body);

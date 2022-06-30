@@ -34,11 +34,25 @@ var perolanegra;
 
 var nerf = [];
 var cruzeiro = [];
+var cruzeiroAnimation = [];
+var cruzeiroDados, cruzeiroSpritesheet;
+var titanic = [];
+var titanicDados, titanicSpritesheet;
+var ocean = [];
+var oceanDados, oceanSpritesheet;
+
+
 
 
 function preload() {
   hogwarts = loadImage("./assets/background.gif");
   enrolados = loadImage("./assets/tower.png");
+  cruzeiroDados = loadJSON("./assets/boat/boat.json");
+  cruzeiroSpritesheet = loadImage("./assets/boat/boat.png");
+  titanicDados = loadJSON ("./assets/boat/brokenBoat.json");
+  titanicSpritesheet = loadImage ("./assets/boat/brokenBoat.png");
+  oceanDados = loadJSON ("./assets/waterSplash/waterSplash.json");
+  oceanSpritesheet = loadImage ("./assets/waterSplash/waterSplash.png");
 }
 
 function setup() {
@@ -62,7 +76,26 @@ function setup() {
 
  bomba = new EraDoGelo (180, 110, 130, 100, agudo);
 
- 
+ var cruzeiroFrames = cruzeiroDados.frames;
+ for(var i = 0; i < cruzeiroFrames.length; i++){
+  var pos = cruzeiroFrames[i].position;
+  var img = cruzeiroSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+  cruzeiroAnimation.push(img);
+ }
+
+ var titanicFrames = titanicDados.frames;
+ for(var i = 0; i < titanicFrames.length; i++){
+  var pos = titanicFrames[i].position;
+  var img = titanicSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+  titanic.push(img);
+ }
+
+ var oceanFrames = oceanDados.frames;
+ for(var i = 0; i < oceanFrames.length; i++){
+  var pos = oceanFrames[i].position;
+  var img = oceanSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+  ocean.push(img);
+ }
 
 }
 
@@ -105,6 +138,7 @@ function keyPressed () {
 function nerfar (sid, i) {
   if (sid){
     sid.preguica();
+    sid.pixer();
     if (sid.body.position.x >= width || sid.body.position.y >= height-50){
       sid.bomba(i);
     }
@@ -117,18 +151,19 @@ function estaleiro () {
     if (cruzeiro[cruzeiro.length-1] === undefined || cruzeiro[cruzeiro.length-1].body.position.x<width-300){
       var positions = [-40, -60, -70, -20];
       var position = random (positions);
-      var perolanegra = new PerolaNegra(width, height-100, 170, 170, position);
+      var perolanegra = new PerolaNegra(width, height-100, 170, 170, position, cruzeiroAnimation);
       cruzeiro.push (perolanegra);
     }
     for (var i = 0; i<cruzeiro.length; i++) {
     if (cruzeiro[i])  {
     Matter.Body.setVelocity(cruzeiro[i].body, {x: -0.9, y: 0});
     cruzeiro[i].luneta();
+    cruzeiro[i].pixer();
   } 
    } 
   }
   else {
-  var perolanegra = new PerolaNegra(width, height-60, 170, 170, -80);
+  var perolanegra = new PerolaNegra(width, height-60, 170, 170, -80, cruzeiroAnimation);
   cruzeiro.push (perolanegra);
   }
 }
