@@ -40,6 +40,14 @@ var titanic = [];
 var titanicDados, titanicSpritesheet;
 var ocean = [];
 var oceanDados, oceanSpritesheet;
+var gameOver = false;
+
+var relaxar;
+var caboom;
+var coringa;
+var splash;
+var pirata = false;
+var placar = 0;
 
 
 
@@ -53,6 +61,10 @@ function preload() {
   titanicSpritesheet = loadImage ("./assets/boat/brokenBoat.png");
   oceanDados = loadJSON ("./assets/waterSplash/waterSplash.json");
   oceanSpritesheet = loadImage ("./assets/waterSplash/waterSplash.png");
+  relaxar = loadSound("./assets/background_music.mp3");
+  caboom = loadSound ("./assets/cannon_explosion.mp3");
+  coringa = loadSound ("./assets/pirate_laugh.mp3");
+  splash = loadSound ("./assets/cannon_water.mp3");
 }
 
 function setup() {
@@ -102,6 +114,13 @@ function setup() {
 function draw() {
   background(189);
   image(hogwarts, 0, 0, 1200, 600);
+  fill ("darkBlue");
+  textSize (35);
+  text ("Placar:"+ placar, 50, 50);
+  if (!relaxar.isPlaying()){
+    relaxar.play();
+    relaxar.setVolume (0.1);
+  }
 
   Engine.update(engine);
  
@@ -124,8 +143,11 @@ function draw() {
 
 function keyReleased(){
     if(keyCode === DOWN_ARROW){
+      caboom.play();
+      caboom.setVolume(0.1);
       nerf[nerf.length -1].dorminhoco();
     }
+
 }
 
 function keyPressed () {
@@ -141,6 +163,11 @@ function nerfar (sid, i) {
     sid.pixer();
     if (sid.body.position.x >= width || sid.body.position.y >= height-50){
       sid.bomba(i);
+      if (sid.afun === true){
+        splash.playMode("untilDone");
+        splash.play();
+        splash.setVolume (0.05);
+      }
     }
   }
 }
@@ -159,6 +186,16 @@ function estaleiro () {
     Matter.Body.setVelocity(cruzeiro[i].body, {x: -0.9, y: 0});
     cruzeiro[i].luneta();
     cruzeiro[i].pixer();
+    var boom = Matter.SAT.collides(rapunzel, cruzeiro[i].body);
+    if(boom.collided && !cruzeiro[i].afun){
+      if(!pirata && !coringa.isPlaying()){
+        coringa.play();
+        coringa.setVolume (0.1);
+        pirata = true;
+      }
+      gameOver = true;
+      theEnd();
+    }
   } 
    } 
   }
@@ -174,10 +211,26 @@ function borracha (index){
     if (nerf[index] !== undefined && cruzeiro[i] !== undefined){
     var pavio = Matter.SAT.collides (nerf[index].body, cruzeiro[i].body);  
     if (pavio.collided){
+      placar += 20;
       cruzeiro[i].bomba(i); 
       Matter.World.remove (world, nerf[index].body);
       delete nerf[index];
     }
     }
   }
+}
+
+function theEnd(){
+  swal({
+    title: "The End!",
+    text: "Obrigada, marujo!",
+    imageUrl: "https://raw.githubusercontent.com/whitehatjr/PiratesInvasion/main/assets/boat.png",
+    imageSize: "150x150",
+    confirmButtonText: "Vamos navegar de novo!"
+  },
+  function(botaoPressionado){
+    if(botaoPressionado){
+      location.reload();
+    }
+  })
 }
